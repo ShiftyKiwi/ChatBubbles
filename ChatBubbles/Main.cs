@@ -38,7 +38,7 @@ namespace ChatBubbles
 
     public unsafe partial class ChatBubbles : IDalamudPlugin
     {
-        public string Name => "Chat Bubbles";
+        public string Name => "Chat Butt Bubbles";
         private readonly List<UIColor> _uiColours;
         private readonly Config _configuration;
         private bool _picker;
@@ -66,6 +66,7 @@ namespace ChatBubbles
         private float _playerBubbleX;
         private int _dirtyHack;
         private bool _config;
+        private bool _oneTimeModal = true;
         private bool _debug;
         //TODO : check pauser usage ; uncomment below if found
         //private int pauser = 0;
@@ -530,6 +531,7 @@ namespace ChatBubbles
 
                 break;
             }
+
             if (_configuration.assBubbles)
                 newAttachmentPointID = 63;
 
@@ -703,7 +705,7 @@ namespace ChatBubbles
 
     public class Config : IPluginConfiguration
     {
-        public int Version { get; set; } = 0;
+        public int Version { get; set; } = 1;
         public List<XivChatType> Channels { get; set; } = new() {XivChatType.Say};
         public int Timer { get; set; } = 7;
         public int BubbleFunctionality { get; set; } = 0;
@@ -720,6 +722,7 @@ namespace ChatBubbles
         public int AttachmentPointID { get; set; } = 0;
         public bool assBubbles { get; set; } = false;
         public bool chaosMode { get; set; } = false;
+        public bool oneTimeModal { get; set; } = true;
 
         public UiColorPick[] TextColour { get; set; } =
         {
