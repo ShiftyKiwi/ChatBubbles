@@ -298,14 +298,6 @@ namespace ChatBubbles
                 ImGui.PopStyleColor(3);
                 ImGui.End();
 
-                if (_dirtyHack > 60)
-                {
-                    SaveConfig();
-                    _dirtyHack = 0;
-                }
-
-                _dirtyHack++;
-
             }
 
             if (_picker)

@@ -13,6 +13,7 @@ using Dalamud.Logging;
 using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Balloon = FFXIVClientStructs.FFXIV.Client.Game.Balloon;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -63,7 +64,6 @@ namespace ChatBubbles
         private AtkResNode* _listOfBubbles;
         private int _playerBubble = 99;
         private float _playerBubbleX;
-        private int _dirtyHack;
         private bool _config;
         private bool _oneTimeModal = true;
         private bool _debug;
@@ -755,20 +755,6 @@ namespace ChatBubbles
         public int Queue { get; set; } = 3;
     }
     
-    [StructLayout(LayoutKind.Explicit, Size = 0x498)]
-    public unsafe struct AddonMiniTalk
-    {
-        [FieldOffset(0x250)] public AtkResNode* ChatBubble0;
-        [FieldOffset(0x288)] public AtkResNode* ChatBubble1;
-        [FieldOffset(0x2C0)] public AtkResNode* ChatBubble2;
-        [FieldOffset(0x2F8)] public AtkResNode* ChatBubble3;
-        [FieldOffset(0x330)] public AtkResNode* ChatBubble4;
-        [FieldOffset(0x368)] public AtkResNode* ChatBubble5;
-        [FieldOffset(0x3A0)] public AtkResNode* ChatBubble6;
-        [FieldOffset(0x3D8)] public AtkResNode* ChatBubble7;
-        [FieldOffset(0x410)] public AtkResNode* ChatBubble8;
-        [FieldOffset(0x448)] public AtkResNode* ChatBubble9;
-    }
 }
 
 /*

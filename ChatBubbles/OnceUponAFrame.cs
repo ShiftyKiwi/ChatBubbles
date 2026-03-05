@@ -4,6 +4,8 @@ using System;
 using Dalamud.Logging;
 using Num = System.Numerics;
 using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.UI;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace ChatBubbles
 {
@@ -19,17 +21,11 @@ namespace ChatBubbles
                 addonPtr2 = Services.GameGui.GetAddonByName("_MiniTalk", 1);
                 if (addonPtr2 != IntPtr.Zero)
                 {
-                    AddonMiniTalk* miniTalk = (AddonMiniTalk*) addonPtr2;
-                    _bubblesAtk2[0] = miniTalk->ChatBubble0;
-                    _bubblesAtk2[1] = miniTalk->ChatBubble1;
-                    _bubblesAtk2[2] = miniTalk->ChatBubble2;
-                    _bubblesAtk2[3] = miniTalk->ChatBubble3;
-                    _bubblesAtk2[4] = miniTalk->ChatBubble4;
-                    _bubblesAtk2[5] = miniTalk->ChatBubble5;
-                    _bubblesAtk2[6] = miniTalk->ChatBubble6;
-                    _bubblesAtk2[7] = miniTalk->ChatBubble7;
-                    _bubblesAtk2[8] = miniTalk->ChatBubble8;
-                    _bubblesAtk2[9] = miniTalk->ChatBubble9;
+                    var miniTalk = (AddonMiniTalk*)addonPtr2;
+                    for (int k = 0; k < 10; k++)
+                    {
+                        _bubblesAtk2[k] = (AtkResNode*)miniTalk->TalkBubbles[k].ComponentNode;
+                    }
                 }
                 else
                 {
