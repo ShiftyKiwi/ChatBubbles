@@ -15,6 +15,8 @@ using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Client.UI.Misc;
+using FFXIVClientStructs.FFXIV.Client.System.String;
 using Balloon = FFXIVClientStructs.FFXIV.Client.Game.Balloon;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Framework = FFXIVClientStructs.FFXIV.Client.System.Framework.Framework;

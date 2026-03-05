@@ -7,6 +7,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Dalamud.Logging;
+using FFXIVClientStructs.FFXIV.Client.UI.Misc;
+using FFXIVClientStructs.FFXIV.Client.System.String;
+using Framework = FFXIVClientStructs.FFXIV.Client.System.Framework.Framework;
 using Num = System.Numerics;
 
 namespace ChatBubbles
@@ -103,6 +106,11 @@ namespace ChatBubbles
                     actr = localPlayer.EntityId;
                     pName = localPlayer.Name.TextValue;
                 }
+            }
+
+            if (localPlayer != null && pName == localPlayer.Name.TextValue)
+            {
+                ShowLocalPlayerBubble(type, pName, cmessage.TextValue, (ushort)localPlayer.HomeWorld.RowId);
             }
 
             fmessage.Payloads.Insert(0,
@@ -215,6 +223,30 @@ namespace ChatBubbles
                 });
 
             }
+        }
+
+        private void ShowLocalPlayerBubble(XivChatType type, string senderName, string message, ushort worldId)
+        {
+            if (string.IsNullOrWhiteSpace(senderName) || string.IsNullOrWhiteSpace(message))
+            {
+                return;
+            }
+
+            var uiModule = Framework.Instance()->GetUIModule();
+            if (uiModule == null)
+            {
+                return;
+            }
+
+            var raptureLogModule = uiModule->GetRaptureLogModule();
+            if (raptureLogModule == null)
+            {
+                return;
+            }
+
+            using var sender = new Utf8String(senderName);
+            using var text = new Utf8String(message);
+            raptureLogModule->ShowMiniTalkPlayer((ushort)type, &sender, &text, worldId, true);
         }
     }
 }
