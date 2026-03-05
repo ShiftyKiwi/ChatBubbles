@@ -221,7 +221,21 @@ namespace ChatBubbles
 
             if (_switch && !Services.ClientState.IsPvP)
             {
-                TryOpenCharacterBubble(actr, fmessage.TextValue);
+                var currentBubble = _charDatas
+                    .Where(cd => cd.ActorId == actr)
+                    .OrderByDescending(cd => cd.MessageDateTime)
+                    .FirstOrDefault();
+
+                _pendingBubbleRequest = new PendingBubbleRequest
+                {
+                    ActorId = actr,
+                    Type = currentBubble?.Type ?? type,
+                    Name = pName,
+                    Message = currentBubble?.Message ?? fmessage,
+                    CreatedAtUtc = DateTime.UtcNow
+                };
+
+                TryOpenCharacterBubble(actr, (_pendingBubbleRequest.Message ?? fmessage).TextValue);
             }
         }
 

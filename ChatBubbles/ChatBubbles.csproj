@@ -16,7 +16,7 @@
 		<ImageUrls>https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/image1.png;https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/image2.png</ImageUrls>
 		<Tags>UI;Roleplay;RP;Bubbles;Chat</Tags>
 		<DalamudApiLevel>14</DalamudApiLevel>
-		<Version>2.1.9.5</Version>
+		<Version>2.1.9.6</Version>
 		<Configurations>Release;Debug</Configurations>
 		<Platforms>x64</Platforms>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>

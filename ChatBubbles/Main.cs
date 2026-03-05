@@ -163,6 +163,7 @@ namespace ChatBubbles
         private readonly AtkResNode*[] _bubblesAtk = new AtkResNode*[10];
         private readonly AtkResNode*[] _bubblesAtk2 = new AtkResNode*[10];
         private readonly UiColorPick[] _textColour;
+        private PendingBubbleRequest? _pendingBubbleRequest;
 
 
         [UnmanagedFunctionPointer(CallingConvention.ThisCall, CharSet = CharSet.Ansi)]
@@ -421,13 +422,15 @@ namespace ChatBubbles
                 }
             }
 
-            if (actor != IntPtr.Zero)
+            if (actor != IntPtr.Zero || _pendingBubbleRequest != null)
             {
-                const int idOffset = 116;
-                var actorId = Marshal.ReadInt32(actor + idOffset);
+                var actorId = TryReadActorId(actor);
+                var pending = GetPendingBubbleRequest(actorId);
+                var charData = GetCurrentCharData(actorId) ?? (pending != null ? GetCurrentCharData((int)pending.ActorId) : null);
+                var bubbleType = charData?.Type ?? pending?.Type;
+                var bubbleName = charData?.Name ?? pending?.Name;
 
-
-                foreach (var cd in _charDatas.Where(cd => actorId == cd.ActorId))
+                if (bubbleType != null)
                 {
                     if (bubble->State == BalloonState.Inactive && _switch && !Services.ClientState.IsPvP)
                     {
@@ -436,14 +439,14 @@ namespace ChatBubbles
                         var freeSlot = GetFreeBubbleSlot();
                         if (freeSlot == -1)
                         {
-                            break;
+                            return _updateBubbleFuncHook!.Original(bubble, actor, dunnoA, dunnoB);
                         }
 
                         _bubbleActive[freeSlot] = true;
-                        _bubbleActiveType[freeSlot] = cd.Type;
+                        _bubbleActiveType[freeSlot] = bubbleType.Value;
 
                         
-                        if (cd.Name == LocalPlayer?.Name.TextValue)
+                        if (bubbleName == LocalPlayer?.Name.TextValue)
                         {
                             _playerBubble = freeSlot;
                         }
@@ -452,7 +455,7 @@ namespace ChatBubbles
 
                         if (_textScale)
                         {
-                            var val = (double)(cd.Message?.TextValue.Length ?? 0) / 10;
+                            var val = (double)(charData?.Message?.TextValue.Length ?? pending?.Message?.TextValue.Length ?? 0) / 10;
                             if ((float) (_timer * val) < _timer)
                             {
                                 bubble->PlayTimer = _timer;
@@ -468,14 +471,15 @@ namespace ChatBubbles
                         }
                     }
 
-                    if (bubble->State == BalloonState.Active && cd.NewMessage)
+                    if (bubble->State == BalloonState.Active && charData?.NewMessage == true)
                     {
                         bubble->State = BalloonState.Inactive;
                         bubble->PlayTimer = 0;
-                        cd.NewMessage = false;
+                        if (charData != null)
+                        {
+                            charData.NewMessage = false;
+                        }
                     }
-
-                    break;
                 }
             }
 
@@ -511,11 +515,11 @@ namespace ChatBubbles
                 return _openBubbleFuncHook!.Original(self, actor, textPtr, notSure, attachmentPointID);
             }
 
-            const int idOffset = 116;
-            var actorId = Marshal.ReadInt32(actor, idOffset);
+            var actorId = TryReadActorId(actor);
+            var pending = GetPendingBubbleRequest(actorId);
             int newAttachmentPointID = 25;
 
-            foreach (var cd in _charDatas.Where(cd => actorId == cd.ActorId))
+            foreach (var cd in GetCandidateCharDatas(actorId, pending))
             {
                 var freeSlot = GetFreeBubbleSlot();
                 if (freeSlot == -1)
@@ -557,6 +561,71 @@ namespace ChatBubbles
             //Services.PluginLog.Debug(attachmentPointID.ToString());
 
             return _openBubbleFuncHook!.Original(self, actor, textPtr, notSure, newAttachmentPointID);
+        }
+
+        private int TryReadActorId(IntPtr actor)
+        {
+            if (actor == IntPtr.Zero)
+            {
+                return 0;
+            }
+
+            const int idOffset = 116;
+            return Marshal.ReadInt32(actor + idOffset);
+        }
+
+        private CharData? GetCurrentCharData(int actorId)
+        {
+            if (actorId == 0)
+            {
+                return null;
+            }
+
+            return _charDatas
+                .Where(cd => cd.ActorId == actorId)
+                .OrderByDescending(cd => cd.MessageDateTime)
+                .FirstOrDefault();
+        }
+
+        private IEnumerable<CharData> GetCandidateCharDatas(int actorId, PendingBubbleRequest? pending)
+        {
+            var current = GetCurrentCharData(actorId);
+            if (current != null)
+            {
+                yield return current;
+                yield break;
+            }
+
+            if (pending != null)
+            {
+                var pendingCurrent = GetCurrentCharData((int)pending.ActorId);
+                if (pendingCurrent != null)
+                {
+                    yield return pendingCurrent;
+                    yield break;
+                }
+            }
+        }
+
+        private PendingBubbleRequest? GetPendingBubbleRequest(int actorId)
+        {
+            if (_pendingBubbleRequest == null)
+            {
+                return null;
+            }
+
+            if ((DateTime.UtcNow - _pendingBubbleRequest.CreatedAtUtc).TotalSeconds > 2)
+            {
+                _pendingBubbleRequest = null;
+                return null;
+            }
+
+            if (actorId != 0 && _pendingBubbleRequest.ActorId != (uint)actorId)
+            {
+                return null;
+            }
+
+            return _pendingBubbleRequest;
         }
 
         void IDisposable.Dispose()
@@ -755,6 +824,15 @@ namespace ChatBubbles
         public List<Vector4> BubbleColours2 { get; set; } = new List<Num.Vector4>();
 
         public int Queue { get; set; } = 3;
+    }
+
+    internal class PendingBubbleRequest
+    {
+        public uint ActorId { get; init; }
+        public XivChatType Type { get; init; }
+        public string? Name { get; init; }
+        public SeString? Message { get; init; }
+        public DateTime CreatedAtUtc { get; init; }
     }
     
 }
