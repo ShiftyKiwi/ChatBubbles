@@ -2,7 +2,7 @@
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Plugin;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Diagnostics;
 using Num = System.Numerics;
@@ -322,7 +322,7 @@ namespace ChatBubbles
                         (float) temp[1] / 255,
                         (float) temp[0] / 255)))
                     {
-                        _chooser.Choice = z.Dark;
+                        _chooser!.Choice = z.Dark;
                         _chooser.Option = z.RowId;
                         _picker = false;
                     }

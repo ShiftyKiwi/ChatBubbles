@@ -18,13 +18,14 @@ namespace ChatBubbles
         {
             if (isHandled) return;
             if (!_channels.Contains(type)) return;
+            var localPlayer = LocalPlayer;
             var fmessage = new SeString(new List<Payload>());
             var nline = new SeString(new List<Payload>());
             nline.Payloads.Add(new TextPayload("\n"));
 
 
             //Stolen from Dragon (SheepGoMeh)
-            PlayerPayload playerPayload;
+            PlayerPayload? playerPayload = null;
 
             List<char> toRemove = new()
             {
@@ -40,13 +41,13 @@ namespace ChatBubbles
                 sanitized = sanitized.Replace(c.ToString(), string.Empty);
             }
 
-            if (sanitized == Services.ClientState.LocalPlayer?.Name.TextValue)
+            if (localPlayer != null && sanitized == localPlayer.Name.TextValue)
             {
-                playerPayload = new PlayerPayload(Services.ClientState.LocalPlayer.Name.TextValue, Services.ClientState.LocalPlayer.HomeWorld.Value.Region);
+                playerPayload = new PlayerPayload(localPlayer.Name.TextValue, localPlayer.HomeWorld.Value!.Region);
                 if (type == XivChatType.CustomEmote)
                 {
                     var playerName = new SeString(new List<Payload>());
-                    playerName.Payloads.Add(new TextPayload(Services.ClientState.LocalPlayer.Name.TextValue));
+                    playerName.Payloads.Add(new TextPayload(localPlayer.Name.TextValue));
                     fmessage.Append(playerName);
                 }
             }
@@ -54,12 +55,13 @@ namespace ChatBubbles
             {
                 if(type == XivChatType.StandardEmote)
 				{
-					playerPayload = sender.Payloads.SingleOrDefault(x => x is PlayerPayload) as PlayerPayload ?? cmessage.Payloads.FirstOrDefault(x => x is PlayerPayload) as PlayerPayload;
+					playerPayload = sender.Payloads.OfType<PlayerPayload>().SingleOrDefault()
+                        ?? cmessage.Payloads.OfType<PlayerPayload>().FirstOrDefault();
 				}
                 else
 				{
-					playerPayload = sender.Payloads.SingleOrDefault(x => x is PlayerPayload) as PlayerPayload; 
-                    if (type == XivChatType.CustomEmote)
+					playerPayload = sender.Payloads.OfType<PlayerPayload>().SingleOrDefault();
+                    if (type == XivChatType.CustomEmote && playerPayload != null)
 					{
 						fmessage.Append(playerPayload.PlayerName);
 					}
@@ -74,9 +76,14 @@ namespace ChatBubbles
                 fmessage.Payloads.Add(new EmphasisItalicPayload(false));
             }
 
-            var pName = playerPayload == default(PlayerPayload) ? Services.ClientState.LocalPlayer?.Name.TextValue : playerPayload.PlayerName;
-            var sName = sender.Payloads.SingleOrDefault(x => x is PlayerPayload) as PlayerPayload;
-            var senderName = sName?.PlayerName != null ? sName.PlayerName : pName;
+            var pName = playerPayload?.PlayerName ?? localPlayer?.Name.TextValue;
+            var sName = sender.Payloads.OfType<PlayerPayload>().SingleOrDefault();
+            var senderName = sName?.PlayerName ?? pName;
+
+            if (string.IsNullOrEmpty(pName) || string.IsNullOrEmpty(senderName))
+            {
+                return;
+            }
 
             if(!Services.DutyState.IsDutyStarted)
             {
@@ -91,10 +98,10 @@ namespace ChatBubbles
 
             if (type == XivChatType.TellOutgoing)
             {
-                if (Services.ClientState.LocalPlayer != null)
+                if (localPlayer != null)
                 {
-                    actr = Services.ClientState.LocalPlayer.EntityId;
-                    pName = Services.ClientState.LocalPlayer.Name.TextValue;
+                    actr = localPlayer.EntityId;
+                    pName = localPlayer.Name.TextValue;
                 }
             }
 

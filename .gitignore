@@ -2,3 +2,7 @@
 bin/
 obj/
 .idea/
+.dotnet/
+.nuget/
+NuGet/
+.vscode/

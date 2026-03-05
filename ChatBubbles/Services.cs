@@ -24,7 +24,6 @@ namespace ChatBubbles
 		[PluginService] static internal IFlyTextGui FlyTextGui { get; private set; }
 		[PluginService] static internal IFramework Framework { get; private set; }
 		[PluginService] static internal IGameGui GameGui { get; private set; }
-		[PluginService] static internal IGameNetwork GameNetwork { get; private set; }
 		[PluginService] static internal IJobGauges JobGauges { get; private set; }
 		[PluginService] static internal IKeyState KeyState { get; private set; }
 		[PluginService] static internal IObjectTable ObjectTable { get; private set; }

@@ -1,0 +1,31 @@
+[
+  {
+    "Author": "Haplo064, Khayle",
+    "Name": "Chat Butt Bubbles",
+    "Punchline": "Enables in-game chat bubbles.",
+    "Description": "Using native chat bubble display, see who is talking about what in a more natural fashion.",
+    "Changelog": "Updated for FFXIV patch 7.45, Dalamud API 14, and .NET 10.",
+    "InternalName": "ChatBubbles",
+    "AssemblyVersion": "2.1.9.0",
+    "ApplicableVersion": "any",
+    "DalamudApiLevel": 14,
+    "RepoUrl": "https://github.com/ShiftyKiwi/ChatBubbles",
+    "IconUrl": "https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/icon.png",
+    "ImageUrls": [
+      "https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/image1.png",
+      "https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/image2.png"
+    ],
+    "Tags": [
+      "UI",
+      "Roleplay",
+      "RP",
+      "Bubbles",
+      "Chat"
+    ],
+    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.0/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.0/latest.zip",
+    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.0/latest.zip",
+    "IsTestingExclusive": false,
+    "LastUpdate": "1772721897"
+  }
+]

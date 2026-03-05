@@ -10,7 +10,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Logging;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Numerics;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
@@ -44,7 +44,7 @@ namespace ChatBubbles
         private bool _picker;
         private readonly List<CharData> _charDatas = new();
         private int _timer;
-        private UiColorPick _chooser;
+        private UiColorPick? _chooser;
         private int _queue;
         private int _bubbleFunctionality;
         private bool _hide;
@@ -57,7 +57,6 @@ namespace ChatBubbles
         private readonly List<Vector4> _bubbleColours;
         private readonly List<Vector4> _bubbleColours2;
         private float _defaultScale;
-        private float _positionY;
         private bool _switch;
         private float _bubbleSize;
         private readonly bool _selfLock;
@@ -166,12 +165,14 @@ namespace ChatBubbles
 
         [UnmanagedFunctionPointer(CallingConvention.ThisCall, CharSet = CharSet.Ansi)]
         private delegate IntPtr UpdateBubble(Balloon* bubble, IntPtr actor, IntPtr dunnoA, IntPtr dunnoB);
-        private readonly Hook<UpdateBubble> _updateBubbleFuncHook;
+        private readonly Hook<UpdateBubble>? _updateBubbleFuncHook;
 
 
         [UnmanagedFunctionPointer(CallingConvention.ThisCall, CharSet = CharSet.Ansi)]
         private delegate IntPtr OpenBubble(IntPtr self, IntPtr actor, IntPtr textPtr, bool notSure, int attachmentPointID);
-        private readonly Hook<OpenBubble> _openBubbleFuncHook;
+        private readonly Hook<OpenBubble>? _openBubbleFuncHook;
+
+        private IPlayerCharacter? LocalPlayer => Services.ObjectTable.LocalPlayer;
         
         public ChatBubbles(IDalamudPluginInterface pluginInt)
         {
@@ -233,8 +234,14 @@ namespace ChatBubbles
             {
                 var colorA = ConvertUIColorToColor(a);
                 var colorB = ConvertUIColorToColor(b);
-                ImGui.ColorConvertRGBtoHSV(colorA.X, colorA.Y, colorA.Z, out var aH, out var aS, out var aV);
-                ImGui.ColorConvertRGBtoHSV(colorB.X, colorB.Y, colorB.Z, out var bH, out var bS, out var bV);
+                var aH = 0f;
+                var aS = 0f;
+                var aV = 0f;
+                var bH = 0f;
+                var bS = 0f;
+                var bV = 0f;
+                ImGui.ColorConvertRGBtoHSV(colorA.X, colorA.Y, colorA.Z, ref aH, ref aS, ref aV);
+                ImGui.ColorConvertRGBtoHSV(colorB.X, colorB.Y, colorB.Z, ref bH, ref bS, ref bV);
 
                 var hue = aH.CompareTo(bH);
                 if (hue != 0) { return hue; }
@@ -412,7 +419,7 @@ namespace ChatBubbles
                 }
             }
 
-            if (actor != null)
+            if (actor != IntPtr.Zero)
             {
                 const int idOffset = 116;
                 var actorId = Marshal.ReadInt32(actor + idOffset);
@@ -434,7 +441,7 @@ namespace ChatBubbles
                         _bubbleActiveType[freeSlot] = cd.Type;
 
                         
-                        if (cd.Name == Services.ClientState.LocalPlayer?.Name.TextValue)
+                        if (cd.Name == LocalPlayer?.Name.TextValue)
                         {
                             _playerBubble = freeSlot;
                         }
@@ -443,7 +450,7 @@ namespace ChatBubbles
 
                         if (_textScale)
                         {
-                            var val = (double) cd.Message?.TextValue.Length / 10;
+                            var val = (double)(cd.Message?.TextValue.Length ?? 0) / 10;
                             if ((float) (_timer * val) < _timer)
                             {
                                 bubble->PlayTimer = _timer;
@@ -471,7 +478,7 @@ namespace ChatBubbles
             }
 
 
-            return _updateBubbleFuncHook.Original(bubble, actor, dunnoA, dunnoB);
+            return _updateBubbleFuncHook!.Original(bubble, actor, dunnoA, dunnoB);
         }
         
         private int GetFreeBubbleSlot()
@@ -499,7 +506,7 @@ namespace ChatBubbles
             if (attachmentPointID != 25 && attachmentPointID != 0)
             {
                 Services.PluginLog.Warning($"Unusual AttachmentPoint Detected: {attachmentPointID.ToString()}");
-                return _openBubbleFuncHook.Original(self, actor, textPtr, notSure, attachmentPointID);
+                return _openBubbleFuncHook!.Original(self, actor, textPtr, notSure, attachmentPointID);
             }
 
             const int idOffset = 116;
@@ -547,7 +554,7 @@ namespace ChatBubbles
             //    attachmentPointID = _configuration.AttachmentPointID;
             //Services.PluginLog.Debug(attachmentPointID.ToString());
 
-            return _openBubbleFuncHook.Original(self, actor, textPtr, notSure, newAttachmentPointID);
+            return _openBubbleFuncHook!.Original(self, actor, textPtr, notSure, newAttachmentPointID);
         }
 
         void IDisposable.Dispose()
@@ -556,8 +563,8 @@ namespace ChatBubbles
             Services.PluginInterface.UiBuilder.Draw -= BubbleConfigUi;
             Services.PluginInterface.UiBuilder.OpenConfigUi -= BubbleConfig;
             Services.CommandManager.RemoveHandler("/bub");
-            _updateBubbleFuncHook.Dispose();
-            _openBubbleFuncHook.Dispose();
+            _updateBubbleFuncHook?.Dispose();
+            _openBubbleFuncHook?.Dispose();
             cleanBubbles();
         }
 
@@ -605,7 +612,7 @@ namespace ChatBubbles
 
         private uint GetActorId(string nameInput)
         {
-            if (_hide && nameInput == Services.ClientState.LocalPlayer?.Name.TextValue) return 0;
+            if (_hide && nameInput == LocalPlayer?.Name.TextValue) return 0;
 
             foreach (var t in Services.ObjectTable)
             {
@@ -617,7 +624,7 @@ namespace ChatBubbles
 
         private bool IsFriend(string nameInput)
         {
-            if (nameInput == Services.ClientState.LocalPlayer?.Name.TextValue) return true;
+            if (nameInput == LocalPlayer?.Name.TextValue) return true;
 
             foreach (var t in Services.ObjectTable)
             {
@@ -633,7 +640,7 @@ namespace ChatBubbles
 
         private bool IsPartyMember(string nameInput)
         {
-            if (nameInput == Services.ClientState.LocalPlayer?.Name.TextValue) return true;
+            if (nameInput == LocalPlayer?.Name.TextValue) return true;
 
             foreach (var t in Services.ObjectTable)
             {
@@ -648,7 +655,7 @@ namespace ChatBubbles
 
         private bool IsFC(string nameInput)
         { 
-            if (nameInput == Services.ClientState.LocalPlayer?.Name.TextValue) return true;
+            if (nameInput == LocalPlayer?.Name.TextValue) return true;
 
 			foreach (var t in Services.ObjectTable)
             { 
@@ -656,7 +663,7 @@ namespace ChatBubbles
                 if (pc.Name.TextValue == nameInput)
 
                 {
-					return Services.ClientState.LocalPlayer?.CompanyTag.TextValue == pc.CompanyTag.TextValue;
+					return LocalPlayer?.CompanyTag.TextValue == pc.CompanyTag.TextValue;
                 }
             }
             return false;
@@ -664,7 +671,7 @@ namespace ChatBubbles
 
         private int GetActorDistance(string name)
         {
-            if (name == Services.ClientState.LocalPlayer?.Name.TextValue) return 0;
+            if (name == LocalPlayer?.Name.TextValue) return 0;
 
             foreach (var t in Services.ObjectTable)
             {
