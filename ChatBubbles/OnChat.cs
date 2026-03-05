@@ -112,7 +112,6 @@ namespace ChatBubbles
             fmessage.Payloads.Add(new UIForegroundPayload(0));
 
             if (actr == 0) return;
-            TryOpenCharacterBubble(actr, fmessage.TextValue);
 
             var update = 0;
             var time = new TimeSpan(0, 0, 0);
@@ -218,6 +217,11 @@ namespace ChatBubbles
                     BubbleNumber = bn
                 });
 
+            }
+
+            if (_switch && !Services.ClientState.IsPvP)
+            {
+                TryOpenCharacterBubble(actr, fmessage.TextValue);
             }
         }
 
