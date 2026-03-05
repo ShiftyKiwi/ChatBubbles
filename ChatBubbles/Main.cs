@@ -164,6 +164,7 @@ namespace ChatBubbles
         private readonly AtkResNode*[] _bubblesAtk2 = new AtkResNode*[10];
         private readonly UiColorPick[] _textColour;
         private PendingBubbleRequest? _pendingBubbleRequest;
+        private readonly Queue<PendingVisualBubble> _pendingVisualBubbles = new();
 
 
         [UnmanagedFunctionPointer(CallingConvention.ThisCall, CharSet = CharSet.Ansi)]
@@ -833,6 +834,12 @@ namespace ChatBubbles
         public string? Name { get; init; }
         public SeString? Message { get; init; }
         public DateTime CreatedAtUtc { get; init; }
+    }
+
+    internal class PendingVisualBubble
+    {
+        public XivChatType Type { get; init; }
+        public string? Name { get; init; }
     }
     
 }

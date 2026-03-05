@@ -44,6 +44,18 @@ namespace ChatBubbles
                         {
                             break;
                         }
+                        if (_bubblesAtk2[k]->IsVisible() && !_bubbleActive[k] && _pendingVisualBubbles.Count > 0)
+                        {
+                            var pendingVisual = _pendingVisualBubbles.Dequeue();
+                            _bubbleActive[k] = true;
+                            _bubbleActiveType[k] = pendingVisual.Type;
+
+                            if (pendingVisual.Name == LocalPlayer?.Name.TextValue)
+                            {
+                                _playerBubble = k;
+                            }
+                        }
+
                         if (_bubblesAtk2[k]->IsVisible() && _bubbleActive[k])
                         {
                             if (_playerBubble == k && _selfLock)

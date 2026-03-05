@@ -200,22 +200,24 @@ namespace ChatBubbles
             }
             else
             {
-                if (update >= _queue)
+                if (_bubbleFunctionality == 0 && update >= _queue)
                 {
                     return;
                 }
-                time = new TimeSpan(0, 0, 0, add, -timeTake);
 
-
-                _charDatas.Add(new CharData
+                if (_bubbleFunctionality == 0)
                 {
-                    ActorId = actr,
-                    MessageDateTime = DateTime.Now.Add(time),
-                    Message = fmessage,
-                    Name = pName,
-                    Type = type,
-                    BubbleNumber = bn
-                });
+                    time = new TimeSpan(0, 0, 0, add, -timeTake);
+                    _charDatas.Add(new CharData
+                    {
+                        ActorId = actr,
+                        MessageDateTime = DateTime.Now.Add(time),
+                        Message = fmessage,
+                        Name = pName,
+                        Type = type,
+                        BubbleNumber = bn
+                    });
+                }
 
             }
 
@@ -234,6 +236,11 @@ namespace ChatBubbles
                     Message = currentBubble?.Message ?? fmessage,
                     CreatedAtUtc = DateTime.UtcNow
                 };
+                _pendingVisualBubbles.Enqueue(new PendingVisualBubble
+                {
+                    Type = currentBubble?.Type ?? type,
+                    Name = pName
+                });
 
                 TryOpenCharacterBubble(actr, (_pendingBubbleRequest.Message ?? fmessage).TextValue);
             }
