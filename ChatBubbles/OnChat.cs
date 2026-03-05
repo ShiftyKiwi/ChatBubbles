@@ -2,14 +2,13 @@
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Plugin;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Dalamud.Logging;
-using FFXIVClientStructs.FFXIV.Client.UI.Misc;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.System.String;
-using Framework = FFXIVClientStructs.FFXIV.Client.System.Framework.Framework;
 using Num = System.Numerics;
 
 namespace ChatBubbles
@@ -108,16 +107,13 @@ namespace ChatBubbles
                 }
             }
 
-            if (localPlayer != null && pName == localPlayer.Name.TextValue)
-            {
-                ShowLocalPlayerBubble(type, pName, cmessage.TextValue, (ushort)localPlayer.HomeWorld.RowId);
-            }
-
             fmessage.Payloads.Insert(0,
                 new UIForegroundPayload((ushort)_textColour[_order.IndexOf(type)].Option));
             fmessage.Payloads.Add(new UIForegroundPayload(0));
 
             if (actr == 0) return;
+            TryOpenCharacterBubble(actr, fmessage.TextValue);
+
             var update = 0;
             var time = new TimeSpan(0, 0, 0);
             var add = 0;
@@ -225,28 +221,39 @@ namespace ChatBubbles
             }
         }
 
-        private void ShowLocalPlayerBubble(XivChatType type, string senderName, string message, ushort worldId)
+        private void TryOpenCharacterBubble(uint actorId, string message)
         {
-            if (string.IsNullOrWhiteSpace(senderName) || string.IsNullOrWhiteSpace(message))
+            if (actorId == 0 || string.IsNullOrWhiteSpace(message))
             {
                 return;
             }
 
-            var uiModule = Framework.Instance()->GetUIModule();
-            if (uiModule == null)
+            foreach (var obj in Services.ObjectTable)
             {
+                if (obj is not IPlayerCharacter playerCharacter || playerCharacter.EntityId != actorId)
+                {
+                    continue;
+                }
+
+                if (playerCharacter.Address == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                var attachmentPointId = (byte)(_configuration.assBubbles ? 63 : 25);
+                if (_configuration.chaosMode && attachmentPointId == 25)
+                {
+                    int[] chaos = [1, 6, 7, 8, 9, 10, 11, 25, 28, 30, 32, 33, 34, 35, 43, 44, 45, 48, 49, 50, 51, 52, 53, 54, 55, 62, 63, 64];
+                    new Random().Shuffle(chaos);
+                    attachmentPointId = (byte)chaos[0];
+                }
+
+                using var text = new Utf8String(message);
+                var character = (Character*)playerCharacter.Address;
+                character->YellBalloon.OpenBalloon(text.StringPtr, _timer, false, 0f, false, false, true, attachmentPointId);
+
                 return;
             }
-
-            var raptureLogModule = uiModule->GetRaptureLogModule();
-            if (raptureLogModule == null)
-            {
-                return;
-            }
-
-            using var sender = new Utf8String(senderName);
-            using var text = new Utf8String(message);
-            raptureLogModule->ShowMiniTalkPlayer((ushort)type, &sender, &text, worldId, true);
         }
     }
 }
