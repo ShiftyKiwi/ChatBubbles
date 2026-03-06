@@ -428,7 +428,7 @@ namespace ChatBubbles
 
                 if (bubbleType != null)
                 {
-                    if (bubble->State == BalloonState.Inactive && _switch && !Services.ClientState.IsPvP)
+                    if (bubble->State == BalloonState.Inactive && _switch)
                     {
 
                         //Get the slot that will turn into the bubble

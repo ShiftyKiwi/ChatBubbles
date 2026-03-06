@@ -221,7 +221,7 @@ namespace ChatBubbles
 
             }
 
-            if (_switch && !Services.ClientState.IsPvP)
+            if (_switch)
             {
                 var currentBubble = _charDatas
                     .Where(cd => cd.ActorId == actr)
