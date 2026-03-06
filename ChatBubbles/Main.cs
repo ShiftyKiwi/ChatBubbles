@@ -165,6 +165,7 @@ namespace ChatBubbles
         private readonly UiColorPick[] _textColour;
         private PendingBubbleRequest? _pendingBubbleRequest;
         private readonly Queue<PendingVisualBubble> _pendingVisualBubbles = new();
+        private IntPtr _lastMiniTalkAddonPtr = IntPtr.Zero;
 
 
         [UnmanagedFunctionPointer(CallingConvention.ThisCall, CharSet = CharSet.Ansi)]
@@ -562,6 +563,20 @@ namespace ChatBubbles
             //Services.PluginLog.Debug(attachmentPointID.ToString());
 
             return _openBubbleFuncHook!.Original(self, actor, textPtr, notSure, newAttachmentPointID);
+        }
+
+        private void ResetBubbleTracking()
+        {
+            for (var i = 0; i < _bubbleActive.Length; i++)
+            {
+                _bubbleActive[i] = false;
+                _bubbleActiveType[i] = XivChatType.Debug;
+                _bubblesAtk2[i] = null;
+            }
+
+            _playerBubble = 99;
+            _playerBubbleX = 0;
+            _pendingVisualBubbles.Clear();
         }
 
         private int TryReadActorId(IntPtr actor)

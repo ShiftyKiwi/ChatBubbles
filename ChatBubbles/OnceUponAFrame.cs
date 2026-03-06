@@ -19,6 +19,12 @@ namespace ChatBubbles
                 // Populate the miniTalks if there are any bubbles 
                 var addonPtr2 = IntPtr.Zero;
                 addonPtr2 = Services.GameGui.GetAddonByName("_MiniTalk", 1);
+                if (addonPtr2 != _lastMiniTalkAddonPtr)
+                {
+                    ResetBubbleTracking();
+                    _lastMiniTalkAddonPtr = addonPtr2;
+                }
+
                 if (addonPtr2 != IntPtr.Zero)
                 {
                     var miniTalk = (AddonMiniTalk*)addonPtr2;
@@ -29,10 +35,7 @@ namespace ChatBubbles
                 }
                 else
                 {
-                    for (int k = 0; k < 10; k++)
-                    {
-                        _bubblesAtk2[k] = null;
-                    }
+                    ResetBubbleTracking();
                 }
 
 
