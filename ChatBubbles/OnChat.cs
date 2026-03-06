@@ -265,17 +265,9 @@ namespace ChatBubbles
                     return;
                 }
 
-                var attachmentPointId = (byte)(_configuration.assBubbles ? 63 : 25);
-                if (_configuration.chaosMode && attachmentPointId == 25)
-                {
-                    int[] chaos = [1, 6, 7, 8, 9, 10, 11, 25, 28, 30, 32, 33, 34, 35, 43, 44, 45, 48, 49, 50, 51, 52, 53, 54, 55, 62, 63, 64];
-                    new Random().Shuffle(chaos);
-                    attachmentPointId = (byte)chaos[0];
-                }
-
                 using var text = new Utf8String(message);
                 var character = (Character*)playerCharacter.Address;
-                character->YellBalloon.OpenBalloon(text.StringPtr, _timer, false, 0f, false, false, true, attachmentPointId);
+                character->YellBalloon.OpenBalloon(text.StringPtr, _timer, false, 0f, false, false, true, 25);
 
                 return;
             }

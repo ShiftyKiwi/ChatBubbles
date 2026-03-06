@@ -5,6 +5,7 @@ using Dalamud.Plugin;
 using Dalamud.Bindings.ImGui;
 using System;
 using System.Diagnostics;
+using System.Numerics;
 using Num = System.Numerics;
 
 
@@ -32,17 +33,6 @@ namespace ChatBubbles
                 if (ImGui.IsItemHovered())
                 {
                     ImGui.SetTooltip("Hides your own character's bubbles.");
-                }
-                ImGui.Checkbox("Chaos Mode", ref _chaosMode);
-                if (ImGui.IsItemHovered())
-                {
-                    ImGui.SetTooltip("What would this even do?");
-                }
-                ImGui.SameLine();
-                ImGui.Checkbox("Butt Bubbles", ref _assBubbles);
-                if (ImGui.IsItemHovered())
-                {
-                    ImGui.SetTooltip("Enjoy it while it's still there!");
                 }
                 ImGui.Checkbox("Display friends only", ref _friendsOnly);
                 if (ImGui.IsItemHovered())
@@ -246,6 +236,28 @@ namespace ChatBubbles
                                 "Set the colour of the bubble background.");
                         }
                         ImGui.SameLine();
+                        if (ImGui.SmallButton($"Copy##{i}"))
+                        {
+                            _copiedChannelStyle = new CopiedChannelStyle
+                            {
+                                TextColor = new UiColorPick
+                                {
+                                    Choice = _textColour[i].Choice,
+                                    Option = _textColour[i].Option
+                                },
+                                BubbleTint = temp2,
+                                BubbleBackground = temp
+                            };
+                        }
+                        ImGui.SameLine();
+                        if (ImGui.SmallButton($"Paste##{i}") && _copiedChannelStyle != null)
+                        {
+                            _textColour[i].Choice = _copiedChannelStyle.TextColor.Choice;
+                            _textColour[i].Option = _copiedChannelStyle.TextColor.Option;
+                            temp2 = _copiedChannelStyle.BubbleTint;
+                            temp = _copiedChannelStyle.BubbleBackground;
+                        }
+                        ImGui.SameLine();
 
                         var enabled = _channels.Contains(e);
                         if (ImGui.Checkbox($"{e}", ref enabled))
@@ -328,61 +340,24 @@ namespace ChatBubbles
 
             if (_oneTimeModal && _configuration.oneTimeModal)
             {
-
-				ImGui.SetNextWindowSizeConstraints(new Num.Vector2(600, 400), new Num.Vector2(600, 400));
-				ImGui.Begin("Chat Butt Bubbles", ref _oneTimeModal);
-				ImGui.PushFont(UiBuilder.MonoFont);
-				ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedGold);
-				ImGui.Text($"Welcome to Re:Chat Butt Bubbles EX plus α Final Mix \nFinal Chapter prologue part 1 HD Turbo Remix Remastered \nFeaturing Dante From The Devil May Cry Series & Knuckles (final ver.)");
-				ImGui.PopStyleColor();
-				ImGui.PopFont();
-				ImGui.Spacing();
-				ImGui.Text("This is the first time you're installing the latest and final version of Chat Butt Bubbles.");
-				ImGui.Text("With the introduction of the official Chat Bubbles, this plugin will be sunset with 7.3.");
-				ImGui.Spacing();
-				ImGui.Spacing();
-				ImGui.PushFont(UiBuilder.MonoFont);
-				ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.TankBlue);
-				ImGui.Text($"Butt Bubbles");
-				ImGui.PopStyleColor();
-				ImGui.PopFont();
-				ImGui.Separator();
-				ImGui.Text("As a final gift to the community, I decided to allow the Butt Bubbles to be permanently enabled*.");
-				ImGui.Text("You can enable this option here, and you will be able to disable it in the Chat Butt Bubbles config.");
-				ImGui.Spacing();
-				ImGui.Spacing();
-				if (ImGui.Checkbox("Enable the Butt Bubbles.", ref _assBubbles))
-				{
-					_configuration.assBubbles = _assBubbles;
-					SaveConfig();
-				}
-				ImGui.Spacing();
-                ImGui.Text("One last thing.");
-                ImGui.Text("I am very thankful to the FFXIV community as a whole for all the memes and support.");
-				ImGui.Text("You are the reason why this plugin finally got its official introduction to the game! Thank you!");
-
-				ImGui.Spacing();
-				ImGui.Spacing();
-				ImGui.Spacing();
-				if (ImGui.Button("Save and Close"))
-				{
-					_configuration.oneTimeModal = false;
-					SaveConfig();
-				}
-				if (ImGui.IsItemHovered())
-				{
-					ImGui.SetTooltip(
-						"BTW: I want you to know that chances are high that a new plugin replaces this one, since the functionalities from SE will be lacking.");
-				}
-
-				ImGui.Spacing();
-				ImGui.Spacing();
-				ImGui.Spacing();
-				ImGui.Spacing();
-				ImGui.Spacing();
-				ImGui.Spacing();
-				ImGui.Text("* permanently until 7.3 lmao");
-			}
+                ImGui.SetNextWindowSizeConstraints(new Num.Vector2(600, 280), new Num.Vector2(600, 280));
+                ImGui.Begin("Chat Butt Bubbles", ref _oneTimeModal);
+                ImGui.PushFont(UiBuilder.MonoFont);
+                ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedGold);
+                ImGui.Text("Welcome to the updated Chat Butt Bubbles build.");
+                ImGui.PopStyleColor();
+                ImGui.PopFont();
+                ImGui.Spacing();
+                ImGui.Text("This plugin now focuses on the core bubble behavior and channel customization.");
+                ImGui.Text("Use the new Copy/Paste buttons in the channel list to reuse styles quickly.");
+                ImGui.Spacing();
+                if (ImGui.Button("Save and Close"))
+                {
+                    _configuration.oneTimeModal = false;
+                    SaveConfig();
+                }
+                ImGui.End();
+            }
         }
     }
 }

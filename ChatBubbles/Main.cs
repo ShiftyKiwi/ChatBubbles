@@ -51,8 +51,6 @@ namespace ChatBubbles
         private int _queue;
         private int _bubbleFunctionality;
         private bool _hide;
-        private bool _assBubbles;
-        private bool _chaosMode;
         private bool _friendsOnly;
         private bool _fcOnly;
         private bool _partyOnly;
@@ -165,6 +163,7 @@ namespace ChatBubbles
         private readonly UiColorPick[] _textColour;
         private PendingBubbleRequest? _pendingBubbleRequest;
         private readonly Queue<PendingVisualBubble> _pendingVisualBubbles = new();
+        private CopiedChannelStyle? _copiedChannelStyle;
 
 
         [UnmanagedFunctionPointer(CallingConvention.ThisCall, CharSet = CharSet.Ansi)]
@@ -198,8 +197,6 @@ namespace ChatBubbles
             _bubbleSize = _configuration.BubbleSize;
             _selfLock = _configuration.SelfLock;
             _defaultScale = _configuration.DefaultScale;
-            _assBubbles = _configuration.assBubbles;
-            _chaosMode = _configuration.chaosMode;
             _switch = _configuration.Switch;
             _yalmCap = _configuration.YalmCap;
             _attachmentPointID = _configuration.AttachmentPointID;
@@ -311,8 +308,6 @@ namespace ChatBubbles
             _configuration.Queue = _queue;
             _configuration.BubbleFunctionality = _bubbleFunctionality;
             _configuration.Hide = _hide;
-            _configuration.assBubbles = _assBubbles;
-            _configuration.chaosMode = _chaosMode;
             _configuration.fcOnly = _fcOnly;
             _configuration.friendsOnly = _friendsOnly;
             _configuration.partyOnly = _partyOnly;
@@ -544,16 +539,6 @@ namespace ChatBubbles
                 }
 
                 break;
-            }
-
-            if (_configuration.assBubbles)
-                newAttachmentPointID = 63;
-
-            if(_configuration.chaosMode && newAttachmentPointID == 25)
-            {
-                int[] chaos = [1, 6, 7, 8, 9, 10, 11, 25, 28, 30, 32, 33, 34, 35, 43, 44, 45, 48, 49, 50, 51, 52, 53, 54, 55, 62, 63, 64];
-                new Random().Shuffle(chaos);
-                newAttachmentPointID = chaos[1];
             }
 
             //// Kept for debug purposes
@@ -841,6 +826,13 @@ namespace ChatBubbles
     {
         public XivChatType Type { get; init; }
         public string? Name { get; init; }
+    }
+
+    internal class CopiedChannelStyle
+    {
+        public UiColorPick TextColor { get; init; } = new();
+        public Vector4 BubbleBackground { get; init; }
+        public Vector4 BubbleTint { get; init; }
     }
     
 }
