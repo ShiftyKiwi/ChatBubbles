@@ -22,7 +22,6 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using Framework = FFXIVClientStructs.FFXIV.Client.System.Framework.Framework;
 using Num = System.Numerics;
 using Dalamud.Game.ClientState.Objects.Enums;
-using Dalamud.Interface.Windowing;
 using Lumina.Excel.Sheets;
 
 namespace ChatBubbles
@@ -76,38 +75,6 @@ namespace ChatBubbles
         private bool _pride;
         //Distance
         private int _yalmCap;
-        private int _attachmentPointID;
-        // 1 = forehead 
-        // 6 = right shoulder
-        // 7 = left shoulder
-        // 8 = right elbow
-        // 9 = left elbow
-        // 10 = right knee
-        // 11 = left knee
-        // 27 = face
-        // 27 = face
-        // 28 = breasts
-        // 29->31 = ass
-        // 32 = right hand
-        // 33 = left hand
-        // 34 = right feet
-        // 35 = left feet
-        // 43 = right eye
-        // 44 = left eye
-        // 45 = high head
-        // 46-47 = ass
-        // 48 = lower ass
-        // 49 = breast
-        // 50 = between thighs
-        // 51 = forehead
-        // 52 = left breast offset in front
-        // 53 = mouth offset in front
-        // 54 = belly offset in front
-        // 55 = genitals offset in front
-        // 62 = mouth offset behind
-        // 63 = ideal fart position
-        // 64 = inside core body
-        // 66 = right breast offset behind
 
 
 
@@ -199,7 +166,6 @@ namespace ChatBubbles
             _defaultScale = _configuration.DefaultScale;
             _switch = _configuration.Switch;
             _yalmCap = _configuration.YalmCap;
-            _attachmentPointID = _configuration.AttachmentPointID;
 
             //Added two enums in dalamud update
             if (_bubbleColours.Count == 39)
@@ -319,7 +285,6 @@ namespace ChatBubbles
             _configuration.DefaultScale = _defaultScale;
             _configuration.Switch = _switch;
             _configuration.YalmCap = _yalmCap;
-            //_configuration.AttachmentPointID = _attachmentPointID;
             Services.PluginInterface.SavePluginConfig(_configuration);
         }
 
@@ -540,11 +505,6 @@ namespace ChatBubbles
 
                 break;
             }
-
-            //// Kept for debug purposes
-            //else 
-            //    attachmentPointID = _configuration.AttachmentPointID;
-            //Services.PluginLog.Debug(attachmentPointID.ToString());
 
             return _openBubbleFuncHook!.Original(self, actor, textPtr, notSure, newAttachmentPointID);
         }
@@ -784,9 +744,6 @@ namespace ChatBubbles
         public float DefaultScale { get; set; } = 1f;
         public bool Switch { get; set; } = true;
         public int YalmCap { get; set; } = 99;
-        public int AttachmentPointID { get; set; } = 0;
-        public bool assBubbles { get; set; } = false;
-        public bool chaosMode { get; set; } = false;
         public bool oneTimeModal { get; set; } = true;
 
         public UiColorPick[] TextColour { get; set; } =

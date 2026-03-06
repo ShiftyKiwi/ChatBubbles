@@ -61,13 +61,6 @@ namespace ChatBubbles
                 if (_debug)
                 {
                     ImGui.Text("DEBUG Info");
-
-                    //ImGui.InputInt("AP", ref _attachmentPointID);
-                    //if (ImGui.IsItemHovered())
-                    //{
-                    //    ImGui.SetTooltip("Attachment point ID.");
-                    //}
-                    //ImGui.Text($"Player's AP: {_attachmentPointID}");
                     ImGui.Text($"Player's bubble's position: {_playerBubbleX}");
                     try
                     {
