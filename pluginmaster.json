@@ -4,9 +4,9 @@
     "Name": "Chat Butt Bubbles",
     "Punchline": "Enables in-game chat bubbles.",
     "Description": "Using native chat bubble display, see who is talking about what in a more natural fashion.",
-    "Changelog": "Updated for FFXIV patch 7.45, Dalamud API 14, and .NET 10.",
+    "Changelog": "Validated for FFXIV Patch 7.45 HotFixes on March 11, 2026.",
     "InternalName": "ShiftyChatBubbles",
-    "AssemblyVersion": "2.1.9.12",
+    "AssemblyVersion": "2.1.9.13",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 14,
     "RepoUrl": "https://github.com/ShiftyKiwi/ChatBubbles",
@@ -22,10 +22,10 @@
       "Bubbles",
       "Chat"
     ],
-    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.12/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.12/latest.zip",
-    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.12/latest.zip",
+    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.13/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.13/latest.zip",
+    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.13/latest.zip",
     "IsTestingExclusive": false,
-    "LastUpdate": "1772864340"
+    "LastUpdate": "1773272317"
   }
 ]
