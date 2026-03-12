@@ -4,9 +4,9 @@
     "Name": "Chat Bubbles+",
     "Punchline": "Enables in-game chat bubbles.",
     "Description": "Using native chat bubble display, see who is talking about what in a more natural fashion.",
-    "Changelog": "Adjusted self bubble stabilization to refresh during draw, improving the movement jitter fix. Validated for FFXIV Patch 7.45 HotFixes on March 12, 2026.",
+    "Changelog": "Locks the self bubble root node as well as the outer bubble position to further reduce movement jitter. Validated for FFXIV Patch 7.45 HotFixes on March 12, 2026.",
     "InternalName": "ShiftyChatBubbles",
-    "AssemblyVersion": "2.1.9.15",
+    "AssemblyVersion": "2.1.9.16",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 14,
     "RepoUrl": "https://github.com/ShiftyKiwi/ChatBubbles",
@@ -22,10 +22,10 @@
       "Bubbles",
       "Chat"
     ],
-    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.15/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.15/latest.zip",
-    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.15/latest.zip",
+    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.16/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.16/latest.zip",
+    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.16/latest.zip",
     "IsTestingExclusive": false,
-    "LastUpdate": "1773331957"
+    "LastUpdate": "1773332373"
   }
 ]

@@ -61,6 +61,7 @@ namespace ChatBubbles
         private bool _selfLock;
         private int _playerBubble = 99;
         private float? _selfBubbleOffsetX;
+        private float? _selfBubbleLocalOffsetX;
         private bool _config;
         private bool _oneTimeModal = true;
         private bool _debug;
@@ -123,6 +124,7 @@ namespace ChatBubbles
         private readonly bool[] _bubbleActive = new bool[10];
         private readonly XivChatType[] _bubbleActiveType = Enumerable.Repeat(XivChatType.Debug, 10).ToArray();
         private readonly AtkResNode*[] _bubblesAtk2 = new AtkResNode*[10];
+        private readonly AtkResNode*[] _bubbleRoots = new AtkResNode*[10];
         private readonly UiColorPick[] _textColour;
         private PendingBubbleRequest? _pendingBubbleRequest;
         private readonly Queue<PendingVisualBubble> _pendingVisualBubbles = new();
@@ -383,6 +385,7 @@ namespace ChatBubbles
         {
             _playerBubble = 99;
             _selfBubbleOffsetX = null;
+            _selfBubbleLocalOffsetX = null;
         }
 
         private bool TryGetLocalPlayerScreenX(out float screenX)

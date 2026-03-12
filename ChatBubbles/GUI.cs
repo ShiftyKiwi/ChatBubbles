@@ -70,7 +70,8 @@ namespace ChatBubbles
                 if (_debug)
                 {
                     ImGui.Text("DEBUG Info");
-                    ImGui.Text($"Player bubble X offset: {_selfBubbleOffsetX?.ToString() ?? "unset"}");
+                    ImGui.Text($"Player bubble screen X offset: {_selfBubbleOffsetX?.ToString() ?? "unset"}");
+                    ImGui.Text($"Player bubble local X offset: {_selfBubbleLocalOffsetX?.ToString() ?? "unset"}");
                     try
                     {
                         foreach (CharData cd in _charDatas)

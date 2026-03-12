@@ -17,6 +17,7 @@ namespace ChatBubbles
                 for (var slot = 0; slot < 10; slot++)
                 {
                     _bubblesAtk2[slot] = null;
+                    _bubbleRoots[slot] = null;
                     _bubbleActive[slot] = false;
                     _bubbleActiveType[slot] = XivChatType.Debug;
                 }
@@ -29,6 +30,7 @@ namespace ChatBubbles
             for (var slot = 0; slot < 10; slot++)
             {
                 _bubblesAtk2[slot] = (AtkResNode*)miniTalk->TalkBubbles[slot].ComponentNode;
+                _bubbleRoots[slot] = miniTalk->TalkBubbles[slot].BubbleResNode;
             }
 
             UpdateTrackedBubbleNodes();
@@ -60,12 +62,16 @@ namespace ChatBubbles
             for (var slot = 0; slot < 10; slot++)
             {
                 var bubbleNode = _bubblesAtk2[slot];
-                if (bubbleNode == null)
+                var bubbleRoot = _bubbleRoots[slot];
+                if (bubbleNode == null && bubbleRoot == null)
                 {
                     continue;
                 }
 
-                if (!bubbleNode->IsVisible())
+                var bubbleVisible = (bubbleNode != null && bubbleNode->IsVisible()) ||
+                    (bubbleRoot != null && bubbleRoot->IsVisible());
+
+                if (!bubbleVisible)
                 {
                     _bubbleActive[slot] = false;
                     _bubbleActiveType[slot] = XivChatType.Debug;
@@ -96,21 +102,28 @@ namespace ChatBubbles
                     {
                         if (_selfLock)
                         {
-                            StabilizeSelfBubblePosition(bubbleNode);
+                            StabilizeSelfBubblePosition(bubbleNode, bubbleRoot);
                         }
                         else
                         {
                             _selfBubbleOffsetX = null;
+                            _selfBubbleLocalOffsetX = null;
                         }
                     }
 
-                    ApplyBubbleAppearance(bubbleNode, _bubbleActiveType[slot]);
-                    bubbleNode->ScaleX = _bubbleSize;
-                    bubbleNode->ScaleY = _bubbleSize;
+                    if (bubbleNode != null)
+                    {
+                        ApplyBubbleAppearance(bubbleNode, _bubbleActiveType[slot]);
+                        bubbleNode->ScaleX = _bubbleSize;
+                        bubbleNode->ScaleY = _bubbleSize;
+                    }
                     continue;
                 }
 
-                ResetBubbleNodeAppearance(bubbleNode, _defaultScale);
+                if (bubbleNode != null)
+                {
+                    ResetBubbleNodeAppearance(bubbleNode, _defaultScale);
+                }
             }
         }
 
@@ -164,9 +177,15 @@ namespace ChatBubbles
             if (bubbleNode->AddGreen <= 10) _f3 = !_f3;
         }
 
-        private void StabilizeSelfBubblePosition(AtkResNode* bubbleNode)
+        private void StabilizeSelfBubblePosition(AtkResNode* bubbleNode, AtkResNode* bubbleRoot)
         {
-            if (!TryGetLocalPlayerScreenX(out var screenX))
+            if (bubbleRoot != null)
+            {
+                _selfBubbleLocalOffsetX ??= bubbleRoot->X;
+                bubbleRoot->SetPositionFloat(_selfBubbleLocalOffsetX.Value, bubbleRoot->Y);
+            }
+
+            if (bubbleNode == null || !TryGetLocalPlayerScreenX(out var screenX))
             {
                 return;
             }
