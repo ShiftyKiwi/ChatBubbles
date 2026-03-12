@@ -17,6 +17,7 @@ namespace ChatBubbles
                 for (var slot = 0; slot < 10; slot++)
                 {
                     _bubblesAtk2[slot] = null;
+                    _bubbleSecondaryNodes[slot] = null;
                     _bubbleRoots[slot] = null;
                     _bubbleActive[slot] = false;
                     _bubbleActiveType[slot] = XivChatType.Debug;
@@ -30,6 +31,7 @@ namespace ChatBubbles
             for (var slot = 0; slot < 10; slot++)
             {
                 _bubblesAtk2[slot] = (AtkResNode*)miniTalk->TalkBubbles[slot].ComponentNode;
+                _bubbleSecondaryNodes[slot] = (AtkResNode*)miniTalk->TalkBubbles[slot].ComponentNode2;
                 _bubbleRoots[slot] = miniTalk->TalkBubbles[slot].BubbleResNode;
             }
 
@@ -62,13 +64,15 @@ namespace ChatBubbles
             for (var slot = 0; slot < 10; slot++)
             {
                 var bubbleNode = _bubblesAtk2[slot];
+                var bubbleSecondaryNode = _bubbleSecondaryNodes[slot];
                 var bubbleRoot = _bubbleRoots[slot];
-                if (bubbleNode == null && bubbleRoot == null)
+                if (bubbleNode == null && bubbleSecondaryNode == null && bubbleRoot == null)
                 {
                     continue;
                 }
 
                 var bubbleVisible = (bubbleNode != null && bubbleNode->IsVisible()) ||
+                    (bubbleSecondaryNode != null && bubbleSecondaryNode->IsVisible()) ||
                     (bubbleRoot != null && bubbleRoot->IsVisible());
 
                 if (!bubbleVisible)
@@ -102,11 +106,12 @@ namespace ChatBubbles
                     {
                         if (_selfLock)
                         {
-                            StabilizeSelfBubblePosition(bubbleNode, bubbleRoot);
+                            StabilizeSelfBubblePosition(bubbleNode, bubbleSecondaryNode, bubbleRoot);
                         }
                         else
                         {
                             _selfBubbleOffsetX = null;
+                            _selfBubbleSecondaryOffsetX = null;
                             _selfBubbleLocalOffsetX = null;
                         }
                     }
@@ -177,8 +182,14 @@ namespace ChatBubbles
             if (bubbleNode->AddGreen <= 10) _f3 = !_f3;
         }
 
-        private void StabilizeSelfBubblePosition(AtkResNode* bubbleNode, AtkResNode* bubbleRoot)
+        private void StabilizeSelfBubblePosition(AtkResNode* bubbleNode, AtkResNode* bubbleSecondaryNode, AtkResNode* bubbleRoot)
         {
+            if (bubbleSecondaryNode != null)
+            {
+                _selfBubbleSecondaryOffsetX ??= bubbleSecondaryNode->X;
+                bubbleSecondaryNode->SetPositionFloat(_selfBubbleSecondaryOffsetX.Value, bubbleSecondaryNode->Y);
+            }
+
             if (bubbleRoot != null)
             {
                 _selfBubbleLocalOffsetX ??= bubbleRoot->X;

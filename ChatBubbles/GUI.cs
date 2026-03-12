@@ -71,6 +71,7 @@ namespace ChatBubbles
                 {
                     ImGui.Text("DEBUG Info");
                     ImGui.Text($"Player bubble screen X offset: {_selfBubbleOffsetX?.ToString() ?? "unset"}");
+                    ImGui.Text($"Player bubble secondary X offset: {_selfBubbleSecondaryOffsetX?.ToString() ?? "unset"}");
                     ImGui.Text($"Player bubble local X offset: {_selfBubbleLocalOffsetX?.ToString() ?? "unset"}");
                     try
                     {

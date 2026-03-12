@@ -61,6 +61,7 @@ namespace ChatBubbles
         private bool _selfLock;
         private int _playerBubble = 99;
         private float? _selfBubbleOffsetX;
+        private float? _selfBubbleSecondaryOffsetX;
         private float? _selfBubbleLocalOffsetX;
         private bool _config;
         private bool _oneTimeModal = true;
@@ -124,6 +125,7 @@ namespace ChatBubbles
         private readonly bool[] _bubbleActive = new bool[10];
         private readonly XivChatType[] _bubbleActiveType = Enumerable.Repeat(XivChatType.Debug, 10).ToArray();
         private readonly AtkResNode*[] _bubblesAtk2 = new AtkResNode*[10];
+        private readonly AtkResNode*[] _bubbleSecondaryNodes = new AtkResNode*[10];
         private readonly AtkResNode*[] _bubbleRoots = new AtkResNode*[10];
         private readonly UiColorPick[] _textColour;
         private PendingBubbleRequest? _pendingBubbleRequest;
@@ -376,6 +378,8 @@ namespace ChatBubbles
             if (_playerBubble != slot)
             {
                 _selfBubbleOffsetX = null;
+                _selfBubbleSecondaryOffsetX = null;
+                _selfBubbleLocalOffsetX = null;
             }
 
             _playerBubble = slot;
@@ -385,6 +389,7 @@ namespace ChatBubbles
         {
             _playerBubble = 99;
             _selfBubbleOffsetX = null;
+            _selfBubbleSecondaryOffsetX = null;
             _selfBubbleLocalOffsetX = null;
         }
 
