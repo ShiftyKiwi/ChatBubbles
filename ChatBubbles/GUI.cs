@@ -16,6 +16,15 @@ namespace ChatBubbles
         
         private void BubbleConfigUi()
         {
+            try
+            {
+                RefreshBubbleNodesAndVisuals();
+            }
+            catch (Exception e)
+            {
+                Services.PluginLog.Error($"Error while refreshing bubbles during draw: {e}");
+            }
+
             if (_config)
             {
                 ImGui.SetNextWindowSizeConstraints(new Num.Vector2(600, 850), new Num.Vector2(1920, 1080));

@@ -9,32 +9,36 @@ namespace ChatBubbles
 {
     public unsafe partial class ChatBubbles : IDalamudPlugin
     {
+        private void RefreshBubbleNodesAndVisuals()
+        {
+            var addon = Services.GameGui.GetAddonByName("_MiniTalk", 1);
+            if (addon.Address == IntPtr.Zero)
+            {
+                for (var slot = 0; slot < 10; slot++)
+                {
+                    _bubblesAtk2[slot] = null;
+                    _bubbleActive[slot] = false;
+                    _bubbleActiveType[slot] = XivChatType.Debug;
+                }
+
+                ClearTrackedPlayerBubble();
+                return;
+            }
+
+            var miniTalk = (AddonMiniTalk*)addon.Address;
+            for (var slot = 0; slot < 10; slot++)
+            {
+                _bubblesAtk2[slot] = (AtkResNode*)miniTalk->TalkBubbles[slot].ComponentNode;
+            }
+
+            UpdateTrackedBubbleNodes();
+        }
+
         private void OnceUponAFrame(IFramework framework)
         {
             try
             {
-                var addon = Services.GameGui.GetAddonByName("_MiniTalk", 1);
-                if (addon.Address != IntPtr.Zero)
-                {
-                    var miniTalk = (AddonMiniTalk*)addon.Address;
-                    for (var slot = 0; slot < 10; slot++)
-                    {
-                        _bubblesAtk2[slot] = (AtkResNode*)miniTalk->TalkBubbles[slot].ComponentNode;
-                    }
-
-                    UpdateTrackedBubbleNodes();
-                }
-                else
-                {
-                    for (var slot = 0; slot < 10; slot++)
-                    {
-                        _bubblesAtk2[slot] = null;
-                        _bubbleActive[slot] = false;
-                        _bubbleActiveType[slot] = XivChatType.Debug;
-                    }
-
-                    ClearTrackedPlayerBubble();
-                }
+                RefreshBubbleNodesAndVisuals();
             }
             catch (Exception e)
             {
