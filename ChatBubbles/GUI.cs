@@ -25,6 +25,15 @@ namespace ChatBubbles
                 Services.PluginLog.Error($"Error while refreshing bubbles during draw: {e}");
             }
 
+            try
+            {
+                DrawCustomSelfBubble();
+            }
+            catch (Exception e)
+            {
+                Services.PluginLog.Error($"Error while drawing the custom self bubble: {e}");
+            }
+
             if (_config)
             {
                 ImGui.SetNextWindowSizeConstraints(new Num.Vector2(600, 850), new Num.Vector2(1920, 1080));
@@ -112,7 +121,7 @@ namespace ChatBubbles
                 if (ImGui.IsItemHovered())
                 {
                     ImGui.SetTooltip(
-                        "Keeps your own bubble on one side while it is visible to reduce side-to-side jitter during movement.");
+                        "Uses a fixed custom bubble for your own messages to avoid the native side-to-side jitter during movement.");
                 }
                 ImGui.InputFloat("Players Bubble Scale", ref _bubbleSize);
                 if (ImGui.IsItemHovered())

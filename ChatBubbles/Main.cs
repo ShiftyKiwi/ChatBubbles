@@ -571,6 +571,20 @@ namespace ChatBubbles
                 .FirstOrDefault();
         }
 
+        private CharData? GetVisibleCharData(int actorId)
+        {
+            if (actorId == 0)
+            {
+                return null;
+            }
+
+            var now = DateTime.Now;
+            return _charDatas
+                .Where(cd => cd.ActorId == actorId && cd.MessageDateTime <= now)
+                .OrderByDescending(cd => cd.MessageDateTime)
+                .FirstOrDefault();
+        }
+
         private IEnumerable<CharData> GetCandidateCharDatas(int actorId, PendingBubbleRequest? pending)
         {
             var current = GetCurrentCharData(actorId);

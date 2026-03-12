@@ -216,6 +216,13 @@ namespace ChatBubbles
 
             if (_switch)
             {
+                if (_selfLock && IsLocalPlayerActor(actr))
+                {
+                    _pendingBubbleRequest = null;
+                    ClearTrackedPlayerBubble();
+                    return;
+                }
+
                 var currentBubble = GetCurrentCharData((int)actr);
 
                 _pendingBubbleRequest = new PendingBubbleRequest

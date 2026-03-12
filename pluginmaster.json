@@ -4,9 +4,9 @@
     "Name": "Chat Bubbles+",
     "Punchline": "Enables in-game chat bubbles.",
     "Description": "Using native chat bubble display, see who is talking about what in a more natural fashion.",
-    "Changelog": "Expands self-bubble stabilization to also lock the secondary MiniTalk component node alongside the outer and root nodes. Validated for FFXIV Patch 7.45 HotFixes on March 12, 2026.",
+    "Changelog": "Uses a fixed custom overlay bubble for your own messages when stabilization is enabled, avoiding the native self-bubble side switching during movement. Validated for FFXIV Patch 7.45 HotFixes on March 12, 2026.",
     "InternalName": "ShiftyChatBubbles",
-    "AssemblyVersion": "2.1.9.17",
+    "AssemblyVersion": "2.1.9.18",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 14,
     "RepoUrl": "https://github.com/ShiftyKiwi/ChatBubbles",
@@ -22,10 +22,10 @@
       "Bubbles",
       "Chat"
     ],
-    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.17/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.17/latest.zip",
-    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.17/latest.zip",
+    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.18/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.18/latest.zip",
+    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.18/latest.zip",
     "IsTestingExclusive": false,
-    "LastUpdate": "1773358513"
+    "LastUpdate": "1773359119"
   }
 ]
