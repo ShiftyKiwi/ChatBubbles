@@ -19,7 +19,7 @@ namespace ChatBubbles
             if (_config)
             {
                 ImGui.SetNextWindowSizeConstraints(new Num.Vector2(600, 850), new Num.Vector2(1920, 1080));
-                ImGui.Begin("Chat Butt Bubbles Config", ref _config);
+                ImGui.Begin("Chat Bubbles+ Config", ref _config);
                 
                 
                 ImGui.Checkbox("Show Bubbles", ref _switch);
@@ -61,19 +61,15 @@ namespace ChatBubbles
                 if (_debug)
                 {
                     ImGui.Text("DEBUG Info");
-                    ImGui.Text($"Player's bubble's position: {_playerBubbleX}");
+                    ImGui.Text($"Player bubble X offset: {_selfBubbleOffsetX?.ToString() ?? "unset"}");
                     try
                     {
                         foreach (CharData cd in _charDatas)
                         {
                             ImGui.Text($"Time since last message: {(DateTime.Now - cd.MessageDateTime).TotalMilliseconds}");
                             ImGui.Text($"Bubbles displayed: {cd.Message}");
-                            //TODO : unsure about what this is for now, need to check it out
-                            //ImGui.Text($"KillMe status: {cd.KillMe}");
                         }
 
-                        // Unsure about why it's there
-                        //ImGui.Text($"{_timer * 500}");
                     }
                     catch (Exception e)
                     {
@@ -101,15 +97,12 @@ namespace ChatBubbles
                         "Base the bubble time on the text length.");
                 }
                 */
-                //Jitter occurs more than once a draw frame?
-                /*
-                ImGui.Checkbox("Remove Jitter on self", ref _selfLock);
+                ImGui.Checkbox("Stabilize your bubble", ref _selfLock);
                 if (ImGui.IsItemHovered())
                 {
                     ImGui.SetTooltip(
-                        "Locks the X value of your own bubbles to remove jitter.");
+                        "Keeps your own bubble on one side while it is visible to reduce side-to-side jitter during movement.");
                 }
-                */
                 ImGui.InputFloat("Players Bubble Scale", ref _bubbleSize);
                 if (ImGui.IsItemHovered())
                 {
@@ -334,10 +327,10 @@ namespace ChatBubbles
             if (_oneTimeModal && _configuration.oneTimeModal)
             {
                 ImGui.SetNextWindowSizeConstraints(new Num.Vector2(600, 280), new Num.Vector2(600, 280));
-                ImGui.Begin("Chat Butt Bubbles", ref _oneTimeModal);
+                ImGui.Begin("Chat Bubbles+", ref _oneTimeModal);
                 ImGui.PushFont(UiBuilder.MonoFont);
                 ImGui.PushStyleColor(ImGuiCol.Text, ImGuiColors.ParsedGold);
-                ImGui.Text("Welcome to the updated Chat Butt Bubbles build.");
+                ImGui.Text("Welcome to the updated Chat Bubbles+ build.");
                 ImGui.PopStyleColor();
                 ImGui.PopFont();
                 ImGui.Spacing();

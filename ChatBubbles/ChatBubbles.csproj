@@ -7,8 +7,8 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<AssemblyName>ShiftyChatBubbles</AssemblyName>
 		<InternalName>ShiftyChatBubbles</InternalName>
-		<Name>Chat Butt Bubbles</Name>
-		<Author>Haplo064, Khayle</Author>
+		<Name>Chat Bubbles+</Name>
+		<Author>Haplo064, Kayle, ShiftyKiwi</Author>
 		<Punchline>Enables in-game chat bubbles.</Punchline>
 		<Description>Using native chat bubble display, see who is talking about what in a more natural fashion.</Description>
 		<RepoUrl>https://github.com/ShiftyKiwi/ChatBubbles</RepoUrl>
@@ -16,7 +16,7 @@
 		<ImageUrls>https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/image1.png;https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/image2.png</ImageUrls>
 		<Tags>UI;Roleplay;RP;Bubbles;Chat</Tags>
 		<DalamudApiLevel>14</DalamudApiLevel>
-		<Version>2.1.9.13</Version>
+		<Version>2.1.9.14</Version>
 		<Configurations>Release;Debug</Configurations>
 		<Platforms>x64</Platforms>
 		<ProduceReferenceAssembly>false</ProduceReferenceAssembly>

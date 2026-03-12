@@ -5,11 +5,9 @@ using Dalamud.Plugin;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using FFXIVClientStructs.FFXIV.Client.System.String;
-using Num = System.Numerics;
 
 namespace ChatBubbles
 {
@@ -116,7 +114,6 @@ namespace ChatBubbles
             var update = 0;
             var time = new TimeSpan(0, 0, 0);
             var add = 0;
-            var bn = -1;
             var timeTake = 0;
 
             foreach (var cd in _charDatas)
@@ -149,7 +146,6 @@ namespace ChatBubbles
                 }
 
                 update++;
-                bn = cd.BubbleNumber;
 
                 //queue
                 if (_bubbleFunctionality == 0)
@@ -194,7 +190,6 @@ namespace ChatBubbles
                     ActorId = actr,
                     MessageDateTime = DateTime.Now,
                     Message = fmessage,
-                    Name = pName,
                     Type = type
                 });
             }
@@ -213,9 +208,7 @@ namespace ChatBubbles
                         ActorId = actr,
                         MessageDateTime = DateTime.Now.Add(time),
                         Message = fmessage,
-                        Name = pName,
-                        Type = type,
-                        BubbleNumber = bn
+                        Type = type
                     });
                 }
 
@@ -223,23 +216,19 @@ namespace ChatBubbles
 
             if (_switch)
             {
-                var currentBubble = _charDatas
-                    .Where(cd => cd.ActorId == actr)
-                    .OrderByDescending(cd => cd.MessageDateTime)
-                    .FirstOrDefault();
+                var currentBubble = GetCurrentCharData((int)actr);
 
                 _pendingBubbleRequest = new PendingBubbleRequest
                 {
                     ActorId = actr,
                     Type = currentBubble?.Type ?? type,
-                    Name = pName,
                     Message = currentBubble?.Message ?? fmessage,
                     CreatedAtUtc = DateTime.UtcNow
                 };
                 _pendingVisualBubbles.Enqueue(new PendingVisualBubble
                 {
                     Type = currentBubble?.Type ?? type,
-                    Name = pName
+                    ActorId = actr
                 });
 
                 TryOpenCharacterBubble(actr, (_pendingBubbleRequest.Message ?? fmessage).TextValue);
