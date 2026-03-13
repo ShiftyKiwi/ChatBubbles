@@ -58,11 +58,6 @@ namespace ChatBubbles
         private float _defaultScale;
         private bool _switch;
         private float _bubbleSize;
-        private bool _selfLock;
-        private int _playerBubble = 99;
-        private float? _selfBubbleOffsetX;
-        private float? _selfBubbleSecondaryOffsetX;
-        private float? _selfBubbleLocalOffsetX;
         private bool _config;
         private bool _oneTimeModal = true;
         private bool _debug;
@@ -125,8 +120,6 @@ namespace ChatBubbles
         private readonly bool[] _bubbleActive = new bool[10];
         private readonly XivChatType[] _bubbleActiveType = Enumerable.Repeat(XivChatType.Debug, 10).ToArray();
         private readonly AtkResNode*[] _bubblesAtk2 = new AtkResNode*[10];
-        private readonly AtkResNode*[] _bubbleSecondaryNodes = new AtkResNode*[10];
-        private readonly AtkResNode*[] _bubbleRoots = new AtkResNode*[10];
         private readonly UiColorPick[] _textColour;
         private PendingBubbleRequest? _pendingBubbleRequest;
         private readonly Queue<PendingVisualBubble> _pendingVisualBubbles = new();
@@ -162,7 +155,6 @@ namespace ChatBubbles
             _bubbleColours = _configuration.BubbleColours;
             _bubbleColours2 = _configuration.BubbleColours2;
             _bubbleSize = _configuration.BubbleSize;
-            _selfLock = _configuration.SelfLock;
             _defaultScale = _configuration.DefaultScale;
             _switch = _configuration.Switch;
             _yalmCap = _configuration.YalmCap;
@@ -293,7 +285,6 @@ namespace ChatBubbles
             _configuration.BubbleColours2 = _bubbleColours2;
             _configuration.TextScale = _textScale;
             _configuration.BubbleSize = _bubbleSize;
-            _configuration.SelfLock = _selfLock;
             _configuration.DefaultScale = _defaultScale;
             _configuration.Switch = _switch;
             _configuration.YalmCap = _yalmCap;
@@ -368,51 +359,12 @@ namespace ChatBubbles
             }
         }
 
-        private bool IsLocalPlayerActor(uint actorId)
-        {
-            return actorId != 0 && actorId == LocalPlayer?.EntityId;
-        }
-
-        private void SetTrackedPlayerBubbleSlot(int slot)
-        {
-            if (_playerBubble != slot)
-            {
-                _selfBubbleOffsetX = null;
-                _selfBubbleSecondaryOffsetX = null;
-                _selfBubbleLocalOffsetX = null;
-            }
-
-            _playerBubble = slot;
-        }
-
-        private void ClearTrackedPlayerBubble()
-        {
-            _playerBubble = 99;
-            _selfBubbleOffsetX = null;
-            _selfBubbleSecondaryOffsetX = null;
-            _selfBubbleLocalOffsetX = null;
-        }
-
-        private bool TryGetLocalPlayerScreenX(out float screenX)
-        {
-            screenX = 0;
-            var localPlayer = LocalPlayer;
-            if (localPlayer == null)
-            {
-                return false;
-            }
-
-            return Services.GameGui.WorldToScreen(localPlayer.Position, out var screenPosition)
-                && (screenX = screenPosition.X) >= 0;
-        }
-        
         private IntPtr UpdateBubbleFuncFunc(Balloon* bubble, IntPtr actor, IntPtr dunnoA, IntPtr dunnoB)
         {
             if (actor != IntPtr.Zero || _pendingBubbleRequest != null)
             {
                 var actorId = TryReadActorId(actor);
                 var pending = GetPendingBubbleRequest(actorId);
-                var trackedActorId = actorId != 0 ? (uint)actorId : pending?.ActorId ?? 0;
                 var charData = GetCurrentCharData(actorId) ?? (pending != null ? GetCurrentCharData((int)pending.ActorId) : null);
                 var bubbleType = charData?.Type ?? pending?.Type;
 
@@ -430,11 +382,6 @@ namespace ChatBubbles
 
                         _bubbleActive[freeSlot] = true;
                         _bubbleActiveType[freeSlot] = bubbleType.Value;
-
-                        if (IsLocalPlayerActor(trackedActorId))
-                        {
-                            SetTrackedPlayerBubbleSlot(freeSlot);
-                        }
 
                         bubble->State = BalloonState.Closing;
 
@@ -516,10 +463,6 @@ namespace ChatBubbles
 
                 _bubbleActiveType[freeSlot] = cd.Type;
                 _bubbleActive[freeSlot] = true;
-                if (IsLocalPlayerActor((uint)actorId))
-                {
-                    SetTrackedPlayerBubbleSlot(freeSlot);
-                }
 
                 if (cd.Message?.TextValue.Length > 0)
                 {
@@ -567,20 +510,6 @@ namespace ChatBubbles
 
             return _charDatas
                 .Where(cd => cd.ActorId == actorId)
-                .OrderByDescending(cd => cd.MessageDateTime)
-                .FirstOrDefault();
-        }
-
-        private CharData? GetVisibleCharData(int actorId)
-        {
-            if (actorId == 0)
-            {
-                return null;
-            }
-
-            var now = DateTime.Now;
-            return _charDatas
-                .Where(cd => cd.ActorId == actorId && cd.MessageDateTime <= now)
                 .OrderByDescending(cd => cd.MessageDateTime)
                 .FirstOrDefault();
         }
@@ -775,7 +704,6 @@ namespace ChatBubbles
 		public bool fcOnly { get; set; } = false;
 		public bool partyOnly { get; set; } = false;
 		public bool TextScale { get; set; } = false;
-        public bool SelfLock { get; set; } = false;
         public float BubbleSize { get; set; } = 1f;
         public float DefaultScale { get; set; } = 1f;
         public bool Switch { get; set; } = true;
@@ -817,7 +745,6 @@ namespace ChatBubbles
     internal class PendingVisualBubble
     {
         public XivChatType Type { get; init; }
-        public uint ActorId { get; init; }
     }
 
     internal class CopiedChannelStyle

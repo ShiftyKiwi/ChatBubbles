@@ -216,13 +216,6 @@ namespace ChatBubbles
 
             if (_switch)
             {
-                if (_selfLock && IsLocalPlayerActor(actr))
-                {
-                    _pendingBubbleRequest = null;
-                    ClearTrackedPlayerBubble();
-                    return;
-                }
-
                 var currentBubble = GetCurrentCharData((int)actr);
 
                 _pendingBubbleRequest = new PendingBubbleRequest
@@ -234,8 +227,7 @@ namespace ChatBubbles
                 };
                 _pendingVisualBubbles.Enqueue(new PendingVisualBubble
                 {
-                    Type = currentBubble?.Type ?? type,
-                    ActorId = actr
+                    Type = currentBubble?.Type ?? type
                 });
 
                 TryOpenCharacterBubble(actr, (_pendingBubbleRequest.Message ?? fmessage).TextValue);

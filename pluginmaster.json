@@ -4,9 +4,9 @@
     "Name": "Chat Bubbles+",
     "Punchline": "Enables in-game chat bubbles.",
     "Description": "Using native chat bubble display, see who is talking about what in a more natural fashion.",
-    "Changelog": "Uses a fixed custom overlay bubble for your own messages when stabilization is enabled, avoiding the native self-bubble side switching during movement. Validated for FFXIV Patch 7.45 HotFixes on March 12, 2026.",
+    "Changelog": "Reverts the self-bubble stabilization experiments and returns your own messages to the native bubble path while keeping the recent cleanup and metadata improvements. Validated for FFXIV Patch 7.45 HotFixes on March 12, 2026.",
     "InternalName": "ShiftyChatBubbles",
-    "AssemblyVersion": "2.1.9.18",
+    "AssemblyVersion": "2.1.9.19",
     "ApplicableVersion": "any",
     "DalamudApiLevel": 14,
     "RepoUrl": "https://github.com/ShiftyKiwi/ChatBubbles",
@@ -22,10 +22,10 @@
       "Bubbles",
       "Chat"
     ],
-    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.18/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.18/latest.zip",
-    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.18/latest.zip",
+    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.19/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.19/latest.zip",
+    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.19/latest.zip",
     "IsTestingExclusive": false,
-    "LastUpdate": "1773359119"
+    "LastUpdate": "1773360184"
   }
 ]

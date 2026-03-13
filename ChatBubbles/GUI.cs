@@ -16,24 +16,6 @@ namespace ChatBubbles
         
         private void BubbleConfigUi()
         {
-            try
-            {
-                RefreshBubbleNodesAndVisuals();
-            }
-            catch (Exception e)
-            {
-                Services.PluginLog.Error($"Error while refreshing bubbles during draw: {e}");
-            }
-
-            try
-            {
-                DrawCustomSelfBubble();
-            }
-            catch (Exception e)
-            {
-                Services.PluginLog.Error($"Error while drawing the custom self bubble: {e}");
-            }
-
             if (_config)
             {
                 ImGui.SetNextWindowSizeConstraints(new Num.Vector2(600, 850), new Num.Vector2(1920, 1080));
@@ -79,9 +61,6 @@ namespace ChatBubbles
                 if (_debug)
                 {
                     ImGui.Text("DEBUG Info");
-                    ImGui.Text($"Player bubble screen X offset: {_selfBubbleOffsetX?.ToString() ?? "unset"}");
-                    ImGui.Text($"Player bubble secondary X offset: {_selfBubbleSecondaryOffsetX?.ToString() ?? "unset"}");
-                    ImGui.Text($"Player bubble local X offset: {_selfBubbleLocalOffsetX?.ToString() ?? "unset"}");
                     try
                     {
                         foreach (CharData cd in _charDatas)
@@ -117,12 +96,6 @@ namespace ChatBubbles
                         "Base the bubble time on the text length.");
                 }
                 */
-                ImGui.Checkbox("Stabilize your bubble", ref _selfLock);
-                if (ImGui.IsItemHovered())
-                {
-                    ImGui.SetTooltip(
-                        "Uses a fixed custom bubble for your own messages to avoid the native side-to-side jitter during movement.");
-                }
                 ImGui.InputFloat("Players Bubble Scale", ref _bubbleSize);
                 if (ImGui.IsItemHovered())
                 {
