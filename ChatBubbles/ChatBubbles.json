@@ -4,9 +4,11 @@
   "Punchline": "Enables in-game chat bubbles.",
   "Description": "Using native chat bubble display, see who is talking about what in a more natural fashion.",
   "InternalName": "ShiftyChatBubbles",
+  "AssemblyVersion": "2.1.9.21",
   "ApplicableVersion": "any",
-  "DalamudApiLevel": 14,
+  "DalamudApiLevel": 15,
   "RepoUrl": "https://github.com/ShiftyKiwi/ChatBubbles",
+  "Changelog": "Updated for FFXIV Patch 7.5 and Dalamud API15.",
   "IconUrl": "https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/icon.png",
   "ImageUrls": [ "https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/image1.png", "https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/image2.png" ],
   "Tags": [

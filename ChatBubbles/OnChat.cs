@@ -1,4 +1,5 @@
 ﻿using Dalamud.Game.Text;
+using Dalamud.Game.Chat;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Plugin;
@@ -14,9 +15,13 @@ namespace ChatBubbles
     public unsafe partial class ChatBubbles : IDalamudPlugin
     {
         // What to do with chat messages
-        private void Chat_OnChatMessage(XivChatType type, int senderId, ref SeString sender, ref SeString cmessage, ref bool isHandled)
+        private void Chat_OnChatMessage(IHandleableChatMessage chatMessage)
         {
-            if (isHandled) return;
+            if (chatMessage.IsHandled) return;
+            var type = chatMessage.LogKind;
+            var sender = chatMessage.Sender;
+            var cmessage = chatMessage.Message;
+
             if (!_channels.Contains(type)) return;
             var localPlayer = LocalPlayer;
             var fmessage = new SeString(new List<Payload>());

@@ -4,11 +4,11 @@
     "Name": "Chat Bubbles+",
     "Punchline": "Enables in-game chat bubbles.",
     "Description": "Using native chat bubble display, see who is talking about what in a more natural fashion.",
-    "Changelog": "Validated for FFXIV Patch 7.45 HotFix Patch 2 on March 24, 2026.",
+    "Changelog": "Updated for FFXIV Patch 7.5 and Dalamud API15.",
     "InternalName": "ShiftyChatBubbles",
-    "AssemblyVersion": "2.1.9.20",
+    "AssemblyVersion": "2.1.9.21",
     "ApplicableVersion": "any",
-    "DalamudApiLevel": 14,
+    "DalamudApiLevel": 15,
     "RepoUrl": "https://github.com/ShiftyKiwi/ChatBubbles",
     "IconUrl": "https://raw.githubusercontent.com/ShiftyKiwi/ChatBubbles/main/ChatBubbles/images/icon.png",
     "ImageUrls": [
@@ -22,11 +22,11 @@
       "Bubbles",
       "Chat"
     ],
-    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.20/latest.zip",
-    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.20/latest.zip",
-    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.20/latest.zip",
+    "DownloadLinkInstall": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.21/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.21/latest.zip",
+    "DownloadLinkTesting": "https://github.com/ShiftyKiwi/ChatBubbles/releases/download/v2.1.9.21/latest.zip",
     "IsTestingExclusive": false,
-    "LastUpdate": "1774368678"
+    "LastUpdate": "1777846990"
   }
 ]
 
